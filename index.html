@@ -1,0 +1,1981 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#118a5f">
+<title>FlashLearn — Belajar Lebih Cepat</title>
+<style>
+  /* ============ VARIABEL & DASAR ============ */
+  :root{
+    --white:#ffffff;
+    --green-50:#f3faf6;
+    --green-100:#e3f3ec;
+    --green-200:#c6e7d8;
+    --green-400:#5cbf9a;
+    --green-600:#118a5f;
+    --green-700:#0d6e4c;
+    --green-900:#0a3d2b;
+    --line:rgba(13,110,76,.14);
+    --muted:rgba(10,61,43,.58);
+    --shadow:0 1px 2px rgba(10,61,43,.04), 0 10px 30px rgba(10,61,43,.07);
+    --radius:16px;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    margin:0;background:var(--white);color:var(--green-900);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    line-height:1.55;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;
+  }
+  h1,h2,h3{margin:0;letter-spacing:-.02em;line-height:1.25;}
+  p{margin:0;}
+  button{font-family:inherit;}
+  ::selection{background:var(--green-200);}
+
+  /* ============ LAYOUT ============ */
+  .container{max-width:1080px;margin:0 auto;padding:0 20px;}
+  main.container{padding-top:32px;padding-bottom:90px;}
+
+  /* ============ HEADER ============ */
+  .app-header{
+    position:sticky;top:0;z-index:60;background:rgba(255,255,255,.92);
+    backdrop-filter:saturate(180%) blur(12px);-webkit-backdrop-filter:saturate(180%) blur(12px);
+    border-bottom:1px solid var(--line);
+  }
+  .header-inner{display:flex;align-items:center;justify-content:space-between;gap:14px;min-height:66px;padding:8px 0;flex-wrap:wrap;}
+  .brand{display:flex;align-items:center;gap:10px;}
+  .brand-mark{
+    width:34px;height:34px;border-radius:11px;background:var(--green-600);color:var(--white);
+    display:grid;place-items:center;font-weight:800;font-size:1.05rem;letter-spacing:-.03em;
+  }
+  .brand-name{font-weight:800;font-size:1.06rem;letter-spacing:-.03em;}
+  .header-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+
+  /* ============ TOMBOL ============ */
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    border-radius:12px;border:1px solid transparent;padding:10px 16px;
+    font-size:.9rem;font-weight:600;cursor:pointer;white-space:nowrap;
+    transition:background .2s,color .2s,border-color .2s,transform .15s,box-shadow .2s;
+  }
+  .btn:active{transform:scale(.975);}
+  .btn-primary{background:var(--green-600);color:var(--white);border-color:var(--green-600);}
+  .btn-primary:hover:not(:disabled){background:var(--green-700);border-color:var(--green-700);}
+  .btn-ghost{background:var(--white);color:var(--green-700);border-color:var(--line);}
+  .btn-ghost:hover:not(:disabled){background:var(--green-50);border-color:var(--green-200);}
+  .btn:disabled{opacity:.4;cursor:not-allowed;}
+  .btn-sm{padding:8px 13px;font-size:.83rem;border-radius:10px;}
+  .btn-lg{padding:15px 24px;font-size:1rem;border-radius:14px;min-width:150px;}
+
+  .link-back{
+    background:none;border:none;padding:6px 0;margin-bottom:14px;color:var(--green-700);
+    font-size:.88rem;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;
+    transition:opacity .2s;
+  }
+  .link-back:hover{opacity:.7;}
+
+  /* ============ FORM ============ */
+  .input, textarea{
+    width:100%;padding:11px 14px;border-radius:12px;border:1px solid var(--line);
+    background:var(--white);font-family:inherit;font-size:.95rem;color:var(--green-900);
+    transition:border-color .2s, box-shadow .2s;resize:vertical;line-height:1.55;
+  }
+  .input::placeholder, textarea::placeholder{color:rgba(10,61,43,.35);}
+  .input:focus, textarea:focus{outline:none;border-color:var(--green-400);box-shadow:0 0 0 3px rgba(17,138,95,.13);}
+  .field{display:block;margin-bottom:14px;}
+  .field > span{display:block;font-size:.82rem;font-weight:600;color:var(--green-700);margin-bottom:6px;}
+
+  /* ============ VIEW ============ */
+  .view{display:none;}
+  .view.active{display:block;animation:fadeUp .32s cubic-bezier(.4,0,.2,1);}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}
+
+  .page-head{margin-bottom:24px;}
+  .page-head h1{font-size:1.9rem;font-weight:800;}
+  .page-head .sub{color:var(--muted);font-size:.94rem;margin-top:6px;max-width:70ch;}
+
+  /* ============ STATISTIK ============ */
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px;}
+  .stat{border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;background:var(--white);transition:border-color .25s, box-shadow .25s;}
+  .stat:hover{border-color:var(--green-200);box-shadow:var(--shadow);}
+  .stat-value{display:block;font-size:1.62rem;font-weight:800;letter-spacing:-.03em;line-height:1.2;}
+  .stat-label{font-size:.78rem;color:var(--muted);font-weight:500;}
+
+  /* ============ TOOLBAR ============ */
+  .toolbar{margin-bottom:20px;}
+  .toolbar .input{max-width:380px;}
+
+  /* ============ KARTU SET ============ */
+  .set-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:16px;}
+  .set-card{
+    border:1px solid var(--line);border-radius:18px;padding:20px;background:var(--white);
+    display:flex;flex-direction:column;gap:13px;
+    transition:box-shadow .25s, transform .25s, border-color .25s;
+  }
+  .set-card:hover{box-shadow:var(--shadow);transform:translateY(-3px);border-color:var(--green-200);}
+  .set-card-head{display:flex;align-items:center;justify-content:space-between;gap:10px;}
+  .set-title{font-size:1.06rem;font-weight:700;overflow-wrap:anywhere;}
+  .set-card-meta{display:flex;align-items:center;justify-content:space-between;gap:10px;}
+  .set-card-actions{display:flex;gap:8px;margin-top:2px;}
+  .set-card-actions .btn{flex:1;}
+
+  .badge{
+    display:inline-block;padding:3px 10px;border-radius:999px;background:var(--green-50);
+    color:var(--green-700);font-size:.73rem;font-weight:700;border:1px solid var(--green-100);
+    max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  }
+  .pct{font-weight:800;font-size:.9rem;color:var(--green-700);}
+  .muted{color:var(--muted);}
+  .small{font-size:.8rem;}
+
+  /* ============ PROGRESS ============ */
+  .progress{height:7px;border-radius:999px;background:var(--green-100);overflow:hidden;}
+  .progress-bar{height:100%;border-radius:999px;width:0;background:linear-gradient(90deg,var(--green-400),var(--green-600));transition:width .5s cubic-bezier(.4,0,.2,1);}
+
+  /* ============ PANEL ============ */
+  .panel{border:1px solid var(--line);border-radius:18px;padding:22px;margin-bottom:20px;background:var(--white);}
+  .panel h2{font-size:1.05rem;font-weight:700;margin-bottom:14px;}
+  .panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:6px;}
+  .panel-head h2{margin-bottom:0;}
+  .check{display:inline-flex;align-items:center;gap:7px;font-size:.83rem;color:var(--green-700);font-weight:600;cursor:pointer;user-select:none;}
+  .check input{accent-color:var(--green-600);width:16px;height:16px;cursor:pointer;}
+
+  /* ============ DETAIL SET ============ */
+  .set-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+  .set-head h1{font-size:1.6rem;font-weight:800;overflow-wrap:anywhere;}
+  .set-head-actions{display:flex;gap:8px;flex-wrap:wrap;}
+
+  .card-row{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--line);align-items:flex-start;}
+  .card-row:last-child{border-bottom:none;padding-bottom:0;}
+  .card-index{
+    width:26px;height:26px;border-radius:8px;flex-shrink:0;background:var(--green-50);
+    color:var(--green-700);font-size:.76rem;font-weight:800;display:grid;place-items:center;
+    transition:background .25s,color .25s;
+  }
+  .card-row.is-mastered .card-index{background:var(--green-600);color:var(--white);}
+  .card-content{flex:1;min-width:0;}
+  .card-q{font-weight:600;font-size:.95rem;overflow-wrap:anywhere;}
+  .card-a{color:var(--muted);font-size:.87rem;margin-top:3px;overflow-wrap:anywhere;}
+  .card-row-actions{display:flex;gap:6px;flex-shrink:0;}
+  .icon-btn{
+    border:1px solid var(--line);background:var(--white);color:var(--green-700);
+    border-radius:9px;padding:5px 9px;font-size:.76rem;font-weight:600;cursor:pointer;
+    transition:background .2s,border-color .2s;
+  }
+  .icon-btn:hover{background:var(--green-50);border-color:var(--green-200);}
+
+  /* ============ EMPTY ============ */
+  .empty{border:1px dashed var(--green-200);border-radius:16px;padding:34px 20px;text-align:center;color:var(--muted);font-size:.9rem;grid-column:1/-1;}
+
+  /* ============ MATERI ============ */
+  .material-section{margin-top:36px;}
+  .material-section h2{font-size:1.15rem;font-weight:800;}
+  .mat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:16px;margin-top:14px;}
+  .mat-card{
+    border:1px solid var(--line);border-radius:18px;padding:18px;background:var(--white);
+    display:flex;flex-direction:column;gap:10px;
+    transition:box-shadow .25s, transform .25s, border-color .25s;
+  }
+  .mat-card:hover{box-shadow:var(--shadow);transform:translateY(-3px);border-color:var(--green-200);}
+  .mat-title{font-weight:700;font-size:1rem;overflow-wrap:anywhere;}
+  .mat-preview{
+    font-size:.85rem;color:var(--muted);display:-webkit-box;-webkit-line-clamp:2;
+    -webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere;
+  }
+  .mat-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:4px;}
+
+  .advice{display:grid;gap:10px;}
+  .advice-item{border:1px solid var(--line);border-radius:14px;padding:14px 16px;background:var(--white);}
+  .advice-item strong{display:block;font-size:.92rem;margin-bottom:3px;}
+  .advice-item p{font-size:.86rem;color:var(--muted);}
+
+  .steps{counter-reset:step;display:grid;gap:12px;margin:0;padding:0;list-style:none;}
+  .steps li{position:relative;padding-left:38px;font-size:.92rem;}
+  .steps li::before{
+    counter-increment:step;content:counter(step);position:absolute;left:0;top:0;
+    width:26px;height:26px;border-radius:8px;background:var(--green-600);color:#fff;
+    display:grid;place-items:center;font-size:.78rem;font-weight:800;
+  }
+
+  .schedule{display:grid;gap:8px;}
+  .schedule-row{display:flex;justify-content:space-between;gap:12px;font-size:.88rem;padding:9px 12px;border-radius:10px;background:var(--green-50);}
+  .schedule-row strong{font-weight:700;}
+
+  .plan{display:grid;gap:10px;}
+  .plan-row{display:flex;gap:12px;align-items:flex-start;font-size:.9rem;}
+  .plan-time{
+    flex-shrink:0;font-weight:800;font-size:.74rem;color:var(--green-700);background:var(--green-50);
+    border:1px solid var(--green-100);border-radius:8px;padding:4px 8px;min-width:74px;text-align:center;
+  }
+
+  .compare{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .compare h3{font-size:.78rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--green-700);margin-bottom:8px;}
+  .compare-box{
+    border:1px solid var(--line);border-radius:12px;padding:14px;font-size:.87rem;
+    white-space:pre-wrap;overflow-wrap:anywhere;max-height:340px;overflow:auto;background:var(--white);
+  }
+
+  /* ============ RIWAYAT ============ */
+  .history-section{margin-top:36px;}
+  .history-section h2{font-size:1.15rem;font-weight:800;margin-bottom:14px;}
+  .history-item{
+    display:flex;align-items:center;justify-content:space-between;gap:14px;
+    padding:14px 18px;border:1px solid var(--line);border-radius:14px;margin-bottom:10px;
+    transition:border-color .2s,background .2s;flex-wrap:wrap;
+  }
+  .history-item:hover{border-color:var(--green-200);background:var(--green-50);}
+  .history-main{display:flex;flex-direction:column;gap:2px;min-width:0;}
+  .history-main strong{font-size:.94rem;overflow-wrap:anywhere;}
+  .history-stats{display:flex;align-items:center;gap:12px;flex-shrink:0;}
+  .pill{padding:3px 11px;border-radius:999px;background:var(--green-50);color:var(--green-700);font-size:.76rem;font-weight:700;border:1px solid var(--green-100);}
+
+  /* ============ MODE BELAJAR ============ */
+  .study-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px;}
+  .study-set-name{font-size:.86rem;font-weight:700;color:var(--green-700);text-align:right;overflow-wrap:anywhere;}
+  .study-progress{margin-bottom:22px;}
+  .study-progress-text{font-size:.82rem;color:var(--muted);font-weight:600;margin-top:8px;text-align:center;}
+
+  .flashcard{perspective:1400px;height:350px;cursor:pointer;margin-bottom:6px;}
+  .flashcard-inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .55s cubic-bezier(.4,0,.2,1);}
+  .flashcard[data-flipped="true"] .flashcard-inner{transform:rotateY(180deg);}
+  .flashcard-face{
+    position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;
+    border-radius:22px;padding:30px;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;text-align:center;overflow-y:auto;
+  }
+  .flashcard-front{background:var(--white);border:1px solid var(--line);box-shadow:var(--shadow);}
+  .flashcard-back{background:var(--green-600);color:var(--white);transform:rotateY(180deg);box-shadow:0 14px 40px rgba(17,138,95,.25);}
+  .face-label{font-size:.7rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;opacity:.65;margin-bottom:14px;}
+  .flashcard-face p{font-size:1.3rem;font-weight:600;margin:0;overflow-wrap:anywhere;max-width:100%;white-space:pre-wrap;}
+  .flip-hint{position:absolute;bottom:20px;font-size:.76rem;color:var(--muted);font-weight:500;}
+  .flashcard-back .flip-hint{color:rgba(255,255,255,.75);}
+  .study-controls{display:flex;gap:12px;justify-content:center;margin-top:22px;flex-wrap:wrap;}
+
+  /* ============ MODAL ============ */
+  .modal-overlay{
+    position:fixed;inset:0;z-index:150;background:rgba(10,61,43,.4);
+    display:flex;align-items:center;justify-content:center;padding:20px;animation:fadeIn .2s ease;
+  }
+  .modal-overlay[hidden]{display:none;}
+  @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+  .modal{
+    background:var(--white);border-radius:22px;padding:26px;width:100%;max-width:500px;
+    max-height:88vh;overflow-y:auto;box-shadow:0 26px 70px rgba(10,61,43,.22);
+    animation:pop .26s cubic-bezier(.4,0,.2,1);
+  }
+  @keyframes pop{from{opacity:0;transform:translateY(14px) scale(.97);}to{opacity:1;transform:none;}}
+  .modal h2{font-size:1.18rem;font-weight:800;margin-bottom:14px;}
+  .modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:22px;flex-wrap:wrap;}
+  .modal-actions .btn{flex:1;min-width:110px;}
+  .quote{background:var(--green-50);border-left:3px solid var(--green-400);padding:10px 14px;border-radius:8px;font-size:.9rem;margin:10px 0;overflow-wrap:anywhere;}
+
+  /* ============ RINGKASAN ============ */
+  .summary-hero{text-align:center;padding:6px 0 18px;}
+  .summary-pct{font-size:3rem;font-weight:800;letter-spacing:-.04em;color:var(--green-600);line-height:1;}
+  .summary-caption{font-size:.85rem;color:var(--muted);margin-top:8px;}
+  .summary-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:16px 0;margin-bottom:16px;}
+  .sum-stat{text-align:center;}
+  .sum-stat strong{display:block;font-size:1.3rem;font-weight:800;}
+  .sum-stat span{font-size:.75rem;color:var(--muted);}
+  .summary-list h3{font-size:.78rem;font-weight:800;text-transform:uppercase;letter-spacing:.09em;color:var(--green-700);margin-bottom:10px;}
+  .summary-list ul{margin:0;padding-left:18px;font-size:.87rem;color:var(--muted);}
+  .summary-list li{margin-bottom:6px;overflow-wrap:anywhere;}
+
+  /* ============ TOAST ============ */
+  #toast{
+    position:fixed;left:50%;bottom:28px;z-index:300;transform:translate(-50%,20px);
+    background:var(--green-900);color:var(--white);padding:12px 22px;border-radius:12px;
+    font-size:.88rem;font-weight:600;max-width:90vw;text-align:center;opacity:0;
+    pointer-events:none;transition:opacity .25s, transform .25s;
+    box-shadow:0 12px 34px rgba(10,61,43,.3);
+  }
+  #toast.show{opacity:1;transform:translate(-50%,0);}
+
+  .visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
+
+  /* ============ RESPONSIF ============ */
+  @media (max-width:820px){
+    .stats{grid-template-columns:repeat(2,1fr);}
+    .compare{grid-template-columns:1fr;}
+  }
+  @media (max-width:640px){
+    main.container{padding-top:22px;}
+    .brand-name{display:none;}
+    .header-actions .btn{padding:8px 11px;font-size:.8rem;border-radius:10px;}
+    .page-head h1{font-size:1.5rem;}
+    .set-head h1{font-size:1.3rem;}
+    .stats{grid-template-columns:repeat(2,1fr);gap:10px;}
+    .stat{padding:13px 14px;}
+    .stat-value{font-size:1.32rem;}
+    .set-grid,.mat-grid{grid-template-columns:1fr;}
+    .panel{padding:18px;border-radius:16px;}
+    .flashcard{height:300px;}
+    .flashcard-face{padding:22px;}
+    .flashcard-face p{font-size:1.12rem;}
+    .btn-lg{min-width:0;flex:1;padding:14px 16px;font-size:.94rem;}
+    .study-controls{flex-wrap:nowrap;}
+    .set-head-actions .btn{flex:1;min-width:0;}
+    .summary-pct{font-size:2.5rem;}
+    .history-item{padding:12px 14px;}
+    .mat-actions .btn{flex:1;min-width:130px;}
+  }
+  @media (max-width:380px){
+    .header-actions .btn{padding:7px 9px;font-size:.74rem;}
+    .card-row-actions{flex-direction:column;}
+  }
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <div class="container header-inner">
+    <div class="brand">
+      <span class="brand-mark">F</span>
+      <span class="brand-name">FlashLearn</span>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-ghost" id="btnImport">Impor</button>
+      <button class="btn btn-ghost" id="btnExport">Ekspor</button>
+      <button class="btn btn-ghost" id="btnNewSet">Set Baru</button>
+      <button class="btn btn-primary" id="btnNewMaterial">Tulis Materi</button>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+
+  <!-- ================= DASHBOARD ================= -->
+  <section class="view active" id="view-dashboard">
+    <div class="page-head">
+      <h1>Dashboard</h1>
+      <p class="sub">Belajar dengan cara mengingat, bukan cuma membaca. Pilih set flashcard, atau tempel materi dan ikuti cara tercepatnya.</p>
+    </div>
+
+    <div class="stats" id="stats"></div>
+
+    <div class="toolbar">
+      <input class="input" id="searchInput" type="search" placeholder="Cari set, materi, atau kategori…" autocomplete="off">
+    </div>
+
+    <div class="set-grid" id="setGrid"></div>
+
+    <section class="material-section">
+      <div class="panel-head">
+        <h2>Materi Belajar</h2>
+        <button class="btn btn-primary btn-sm" id="btnAddMaterial">+ Tulis Materi</button>
+      </div>
+      <div class="mat-grid" id="materialList"></div>
+    </section>
+
+    <section class="history-section">
+      <div class="panel-head">
+        <h2>Riwayat Sesi Belajar</h2>
+        <button class="icon-btn" id="btnClearHistory" hidden>Bersihkan</button>
+      </div>
+      <div id="historyList"></div>
+    </section>
+  </section>
+
+  <!-- ================= DETAIL SET ================= -->
+  <section class="view" id="view-set">
+    <button class="link-back" id="btnBackToDash">← Kembali ke Dashboard</button>
+
+    <div class="page-head set-head">
+      <div>
+        <h1 id="setTitle">—</h1>
+        <p class="sub" id="setMeta"></p>
+      </div>
+      <div class="set-head-actions">
+        <button class="btn btn-ghost" id="btnEditSet">Edit Info</button>
+        <button class="btn btn-ghost" id="btnDeleteSet">Hapus</button>
+        <button class="btn btn-primary" id="btnStartStudy">Mulai Belajar</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Tambah Kartu</h2>
+      <form id="addCardForm" novalidate>
+        <label class="field">
+          <span>Pertanyaan</span>
+          <textarea id="newQuestion" rows="2" placeholder="Mis. Apa ibu kota Australia?" maxlength="500"></textarea>
+        </label>
+        <label class="field">
+          <span>Jawaban</span>
+          <textarea id="newAnswer" rows="2" placeholder="Mis. Canberra" maxlength="500"></textarea>
+        </label>
+        <button class="btn btn-primary" type="submit">Tambah Kartu</button>
+      </form>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <h2>Daftar Kartu <span class="muted small" id="cardCount"></span></h2>
+        <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
+          <label class="check"><input type="checkbox" id="shuffleToggle" checked> Acak saat belajar</label>
+          <button class="icon-btn" id="btnResetProgress">Reset Progres</button>
+        </div>
+      </div>
+      <div id="cardList"></div>
+    </div>
+  </section>
+
+  <!-- ================= MATERI ================= -->
+  <section class="view" id="view-material">
+    <button class="link-back" id="btnBackFromMaterial">← Kembali ke Dashboard</button>
+
+    <div class="page-head">
+      <h1 id="materialHeading">Tulis Materi yang Mau Dihafal</h1>
+      <p class="sub">Tempel catatan, ringkasan buku, atau artikel. Kami akan bantu ubah jadi rencana belajar paling cepat — tanpa harus bikin kartu dulu.</p>
+    </div>
+
+    <div class="panel" id="materialEditor">
+      <label class="field">
+        <span>Judul materi (boleh dikosongkan)</span>
+        <input class="input" id="matTitle" maxlength="100" placeholder="Mis. Sistem Pencernaan Manusia" autocomplete="off">
+      </label>
+      <label class="field">
+        <span>Isi materi</span>
+        <textarea id="matContent" rows="10" placeholder="Tempel materi di sini…&#10;&#10;Tips: tulis satu istilah per baris dengan format&#10;Istilah: arti atau penjelasannya&#10;supaya bisa langsung diubah jadi flashcard."></textarea>
+      </label>
+      <div class="mat-actions">
+        <button class="btn btn-primary" id="btnAnalyze">Analisis &amp; Buat Rencana</button>
+        <button class="btn btn-ghost" id="btnSaveMaterial">Simpan Materi</button>
+        <button class="btn btn-ghost" id="btnToCards" disabled>Ubah jadi Flashcard</button>
+        <button class="btn btn-ghost" id="btnRecall" disabled>Latihan Ingat</button>
+      </div>
+      <p class="muted small" style="margin-top:12px;">
+        Semua analisis berjalan di perangkatmu sendiri. Tidak ada data yang dikirim ke mana pun.
+      </p>
+    </div>
+
+    <div id="analysisResult"></div>
+
+    <div class="panel" id="recallPanel" hidden>
+      <div id="recallStage"></div>
+    </div>
+  </section>
+
+  <!-- ================= BELAJAR ================= -->
+  <section class="view" id="view-study">
+    <div class="study-top">
+      <button class="link-back" id="btnExitStudy" style="margin:0;">← Keluar</button>
+      <span class="study-set-name" id="studySetName"></span>
+    </div>
+
+    <div class="study-progress">
+      <div class="progress"><div class="progress-bar" id="studyBar"></div></div>
+      <div class="study-progress-text" id="studyProgressText"></div>
+    </div>
+
+    <div class="flashcard" id="flashcard" data-flipped="false">
+      <div class="flashcard-inner">
+        <div class="flashcard-face flashcard-front">
+          <span class="face-label">Pertanyaan</span>
+          <p id="flashQuestion"></p>
+          <span class="flip-hint">Ketuk kartu untuk melihat jawaban</span>
+        </div>
+        <div class="flashcard-face flashcard-back">
+          <span class="face-label">Jawaban</span>
+          <p id="flashAnswer"></p>
+          <span class="flip-hint">Ketuk untuk kembali</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="study-controls" id="studyControls"></div>
+  </section>
+
+</main>
+
+<!-- ================= MODAL ================= -->
+<div class="modal-overlay" id="modalOverlay" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <h2 id="modalTitle"></h2>
+    <div id="modalBody"></div>
+    <div class="modal-actions" id="modalActions"></div>
+  </div>
+</div>
+
+<div id="toast" role="status" aria-live="polite"></div>
+<input type="file" id="fileInput" accept="application/json,.json" class="visually-hidden">
+
+<script>
+(function(){
+  'use strict';
+
+  /* =========================================================
+     UTILITAS
+     ========================================================= */
+  const $  = (sel, root) => (root || document).querySelector(sel);
+  const $$ = (sel, root) => Array.from((root || document).querySelectorAll(sel));
+
+  const STORAGE_KEY = 'flashlearn.data.v1';
+
+  function uid(){
+    return Date.now().toString(36) + Math.random().toString(36).slice(2, 9);
+  }
+
+  function escapeHtml(str){
+    return String(str == null ? '' : str).replace(/[&<>"']/g, function(m){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m];
+    });
+  }
+
+  function shuffleArray(arr){
+    for(let i = arr.length - 1; i > 0; i--){
+      const j = Math.floor(Math.random() * (i + 1));
+      const t = arr[i]; arr[i] = arr[j]; arr[j] = t;
+    }
+    return arr;
+  }
+
+  function formatDate(ts){
+    try{
+      return new Date(ts).toLocaleString('id-ID', {
+        day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit'
+      });
+    }catch(e){ return '-'; }
+  }
+
+  function truncate(str, n){
+    str = String(str || '');
+    return str.length > n ? str.slice(0, n - 1) + '…' : str;
+  }
+
+  function countWords(text){
+    const t = String(text || '').trim();
+    return t ? t.split(/\s+/).filter(Boolean).length : 0;
+  }
+
+  /* =========================================================
+     STATE
+     ========================================================= */
+  const state = { sets: [], materials: [], history: [] };
+
+  const ui = {
+    view: 'dashboard',
+    currentSetId: null,
+    currentMaterialId: null,
+    search: '',
+    session: null,
+    lastAnalysis: null,
+    recallText: ''
+  };
+
+  function save(){
+    try{
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }catch(e){
+      toast('Gagal menyimpan data: penyimpanan penuh atau diblokir');
+    }
+  }
+
+  function normalizeSet(raw){
+    if(!raw || typeof raw !== 'object') return null;
+    return {
+      id: (typeof raw.id === 'string' && raw.id) ? raw.id : uid(),
+      title: String(raw.title || 'Tanpa Judul').slice(0, 120),
+      category: String(raw.category || '').slice(0, 60),
+      createdAt: typeof raw.createdAt === 'number' ? raw.createdAt : Date.now(),
+      updatedAt: typeof raw.updatedAt === 'number' ? raw.updatedAt : Date.now(),
+      cards: Array.isArray(raw.cards) ? raw.cards
+        .filter(c => c && typeof c === 'object' && (c.question || c.answer))
+        .map(c => ({
+          id: (typeof c.id === 'string' && c.id) ? c.id : uid(),
+          question: String(c.question || '').slice(0, 1000),
+          answer: String(c.answer || '').slice(0, 1000),
+          mastered: !!c.mastered
+        })) : []
+    };
+  }
+
+  function normalizeMaterial(raw){
+    if(!raw || typeof raw !== 'object') return null;
+    const content = String(raw.content || '');
+    if(!content.trim()) return null;
+    return {
+      id: (typeof raw.id === 'string' && raw.id) ? raw.id : uid(),
+      title: String(raw.title || 'Materi Tanpa Judul').slice(0, 120),
+      content: content.slice(0, 60000),
+      createdAt: typeof raw.createdAt === 'number' ? raw.createdAt : Date.now(),
+      updatedAt: typeof raw.updatedAt === 'number' ? raw.updatedAt : Date.now()
+    };
+  }
+
+  function load(){
+    let raw = null;
+    try{ raw = localStorage.getItem(STORAGE_KEY); }catch(e){ raw = null; }
+    if(!raw) return;
+
+    try{
+      const parsed = JSON.parse(raw);
+      if(parsed && Array.isArray(parsed.sets)){
+        state.sets = parsed.sets.map(normalizeSet).filter(Boolean);
+      }
+      if(parsed && Array.isArray(parsed.materials)){
+        state.materials = parsed.materials.map(normalizeMaterial).filter(Boolean);
+      }
+      if(parsed && Array.isArray(parsed.history)){
+        state.history = parsed.history.filter(h =>
+          h && typeof h.date === 'number' && typeof h.total === 'number'
+        );
+      }
+    }catch(e){
+      console.error('Data rusak, memulai dari kosong.', e);
+      toast('Data tersimpan rusak dan diabaikan');
+    }
+  }
+
+  function getSet(id){ return state.sets.find(s => s.id === id) || null; }
+  function getMaterial(id){ return state.materials.find(m => m.id === id) || null; }
+  function findCard(setId, cardId){
+    const set = getSet(setId);
+    return set ? (set.cards.find(c => c.id === cardId) || null) : null;
+  }
+
+  function getCategories(){
+    const set = new Set();
+    state.sets.forEach(s => { if(s.category && s.category.trim()) set.add(s.category.trim()); });
+    return Array.from(set).sort();
+  }
+
+  /* =========================================================
+     TOAST & MODAL
+     ========================================================= */
+  let toastTimer = null;
+  function toast(msg){
+    const el = $('#toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove('show'), 2800);
+  }
+
+  function openModal(opts){
+    const overlay = $('#modalOverlay');
+    $('#modalTitle').textContent = opts.title || '';
+    $('#modalBody').innerHTML = opts.body || '';
+
+    const actionsEl = $('#modalActions');
+    actionsEl.innerHTML = '';
+
+    (opts.actions || []).forEach(function(action){
+      const btn = document.createElement('button');
+      btn.className = 'btn ' + (action.className || 'btn-ghost');
+      btn.type = 'button';
+      btn.textContent = action.label;
+      btn.addEventListener('click', function(){
+        if(typeof action.onClick === 'function'){
+          const result = action.onClick();
+          if(result === false) return; // validasi gagal → modal tetap terbuka
+        }
+        if(action.close !== false) closeModal();
+      });
+      actionsEl.appendChild(btn);
+    });
+
+    overlay.hidden = false;
+    const firstInput = overlay.querySelector('input, textarea');
+    if(firstInput) setTimeout(() => firstInput.focus(), 60);
+  }
+
+  function closeModal(){
+    const overlay = $('#modalOverlay');
+    overlay.hidden = true;
+    $('#modalBody').innerHTML = '';
+    $('#modalActions').innerHTML = '';
+  }
+
+  $('#modalOverlay').addEventListener('click', function(e){
+    if(e.target === this) closeModal();
+  });
+
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && !$('#modalOverlay').hidden) closeModal();
+  });
+
+  /* =========================================================
+     NAVIGASI
+     ========================================================= */
+  function showView(name){
+    ui.view = name;
+    $$('.view').forEach(v => v.classList.remove('active'));
+    const el = $('#view-' + name);
+    if(el) el.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  }
+
+  function goDashboard(){
+    stopRecallTimer();
+    $('#recallPanel').hidden = true;
+    $('#materialEditor').hidden = false;
+    ui.currentSetId = null;
+    showView('dashboard');
+    renderDashboard();
+  }
+
+  /* =========================================================
+     RENDER DASHBOARD
+     ========================================================= */
+  function renderDashboard(){
+    const sets = state.sets;
+    const materials = state.materials;
+    const totalCards = sets.reduce((n, s) => n + s.cards.length, 0);
+    const totalMastered = sets.reduce((n, s) => n + s.cards.filter(c => c.mastered).length, 0);
+    const categories = new Set(sets.map(s => (s.category || '').trim()).filter(Boolean));
+    const overallPct = totalCards ? Math.round(totalMastered / totalCards * 100) : 0;
+
+    $('#stats').innerHTML =
+      '<div class="stat"><span class="stat-value">' + sets.length + '</span><span class="stat-label">Set Flashcard</span></div>' +
+      '<div class="stat"><span class="stat-value">' + totalCards + '</span><span class="stat-label">Total Kartu</span></div>' +
+      '<div class="stat"><span class="stat-value">' + materials.length + '</span><span class="stat-label">Materi Tersimpan</span></div>' +
+      '<div class="stat"><span class="stat-value">' + overallPct + '%</span><span class="stat-label">Rata-rata Penguasaan</span></div>';
+
+    const q = ui.search.trim().toLowerCase();
+
+    /* --- Set flashcard --- */
+    const filteredSets = q
+      ? sets.filter(s =>
+          s.title.toLowerCase().indexOf(q) !== -1 ||
+          (s.category || '').toLowerCase().indexOf(q) !== -1)
+      : sets;
+
+    const grid = $('#setGrid');
+
+    if(!filteredSets.length){
+      grid.innerHTML = '<div class="empty">' +
+        (sets.length
+          ? 'Tidak ada set yang cocok dengan pencarianmu.'
+          : 'Belum ada set flashcard. Tekan “Set Baru” untuk membuat yang pertama.') +
+        '</div>';
+    }else{
+      grid.innerHTML = filteredSets.map(function(s){
+        const total = s.cards.length;
+        const mastered = s.cards.filter(c => c.mastered).length;
+        const pct = total ? Math.round(mastered / total * 100) : 0;
+        return '<article class="set-card">' +
+          '<div class="set-card-head">' +
+            '<span class="badge">' + escapeHtml(s.category || 'Umum') + '</span>' +
+            '<span class="muted small">' + total + ' kartu</span>' +
+          '</div>' +
+          '<h3 class="set-title">' + escapeHtml(s.title) + '</h3>' +
+          '<div class="progress"><div class="progress-bar" style="width:' + pct + '%"></div></div>' +
+          '<div class="set-card-meta">' +
+            '<span class="muted small">' + mastered + '/' + total + ' dikuasai</span>' +
+            '<span class="pct">' + pct + '%</span>' +
+          '</div>' +
+          '<div class="set-card-actions">' +
+            '<button class="btn btn-primary btn-sm" data-action="study" data-id="' + s.id + '"' + (total ? '' : ' disabled') + '>Belajar</button>' +
+            '<button class="btn btn-ghost btn-sm" data-action="open" data-id="' + s.id + '">Kelola</button>' +
+          '</div>' +
+        '</article>';
+      }).join('');
+    }
+
+    /* --- Materi --- */
+    const filteredMaterials = q
+      ? materials.filter(m =>
+          m.title.toLowerCase().indexOf(q) !== -1 ||
+          m.content.toLowerCase().indexOf(q) !== -1)
+      : materials;
+
+    const matList = $('#materialList');
+
+    if(!filteredMaterials.length){
+      matList.innerHTML = '<div class="empty">' +
+        (materials.length
+          ? 'Tidak ada materi yang cocok dengan pencarianmu.'
+          : 'Belum ada materi. Tempel catatan atau ringkasanmu, lalu dapatkan cara belajar tercepatnya.') +
+        '</div>';
+    }else{
+      matList.innerHTML = filteredMaterials.map(function(m){
+        const words = countWords(m.content);
+        return '<article class="mat-card">' +
+          '<div class="set-card-head">' +
+            '<span class="badge">Materi</span>' +
+            '<span class="muted small">' + words + ' kata</span>' +
+          '</div>' +
+          '<h3 class="mat-title">' + escapeHtml(m.title) + '</h3>' +
+          '<p class="mat-preview">' + escapeHtml(m.content) + '</p>' +
+          '<div class="set-card-actions">' +
+            '<button class="btn btn-primary btn-sm" data-action="open-material" data-id="' + m.id + '">Buka &amp; Belajar</button>' +
+            '<button class="btn btn-ghost btn-sm" data-action="delete-material" data-id="' + m.id + '">Hapus</button>' +
+          '</div>' +
+        '</article>';
+      }).join('');
+    }
+
+    renderHistory();
+  }
+
+  function renderHistory(){
+    const list = $('#historyList');
+    const clearBtn = $('#btnClearHistory');
+
+    if(!state.history.length){
+      list.innerHTML = '<div class="empty">Belum ada riwayat. Selesaikan satu sesi belajar untuk melihat ringkasannya di sini.</div>';
+      clearBtn.hidden = true;
+      return;
+    }
+
+    clearBtn.hidden = false;
+    const items = state.history.slice().sort((a, b) => b.date - a.date).slice(0, 20);
+    list.innerHTML = items.map(function(h){
+      return '<div class="history-item">' +
+        '<div class="history-main">' +
+          '<strong>' + escapeHtml(h.setName) + '</strong>' +
+          '<span class="muted small">' + formatDate(h.date) + '</span>' +
+        '</div>' +
+        '<div class="history-stats">' +
+          '<span class="pill">' + h.mastered + '/' + h.total + ' hafal</span>' +
+          '<span class="pct">' + h.percentage + '%</span>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+  }
+
+  $('#setGrid').addEventListener('click', function(e){
+    const btn = e.target.closest('button[data-action]');
+    if(!btn) return;
+    if(btn.dataset.action === 'study') startStudy(btn.dataset.id);
+    else if(btn.dataset.action === 'open') openSet(btn.dataset.id);
+  });
+
+  $('#materialList').addEventListener('click', function(e){
+    const btn = e.target.closest('button[data-action]');
+    if(!btn) return;
+    const id = btn.dataset.id;
+    if(btn.dataset.action === 'open-material') openMaterial(id);
+    else if(btn.dataset.action === 'delete-material') deleteMaterial(id);
+  });
+
+  $('#searchInput').addEventListener('input', function(e){
+    ui.search = e.target.value;
+    renderDashboard();
+  });
+
+  $('#btnClearHistory').addEventListener('click', function(){
+    openModal({
+      title: 'Bersihkan riwayat?',
+      body: '<p>Seluruh riwayat sesi belajar akan dihapus. Set dan materi kamu tidak terpengaruh.</p>',
+      actions: [
+        { label: 'Batal', className: 'btn-ghost' },
+        { label: 'Bersihkan', className: 'btn-primary', onClick: function(){
+            state.history = [];
+            save();
+            renderHistory();
+            toast('Riwayat dibersihkan');
+          } }
+      ]
+    });
+  });
+
+  /* =========================================================
+     DETAIL SET
+     ========================================================= */
+  function openSet(id){
+    const set = getSet(id);
+    if(!set){ toast('Set tidak ditemukan'); goDashboard(); return; }
+    ui.currentSetId = id;
+    showView('set');
+    renderSet();
+  }
+
+  function renderSet(){
+    const set = getSet(ui.currentSetId);
+    if(!set){ goDashboard(); return; }
+
+    const total = set.cards.length;
+    const mastered = set.cards.filter(c => c.mastered).length;
+    const pct = total ? Math.round(mastered / total * 100) : 0;
+
+    $('#setTitle').textContent = set.title;
+    $('#setMeta').textContent = (set.category || 'Umum') + ' · ' + total + ' kartu · ' +
+      mastered + ' dikuasai (' + pct + '%)';
+    $('#cardCount').textContent = '(' + total + ')';
+    $('#btnStartStudy').disabled = total === 0;
+    $('#btnResetProgress').disabled = mastered === 0;
+
+    const list = $('#cardList');
+
+    if(!total){
+      list.innerHTML = '<div class="empty">Belum ada kartu di set ini. Tambahkan kartu pertama lewat formulir di atas.</div>';
+      return;
+    }
+
+    list.innerHTML = set.cards.map(function(c, i){
+      return '<div class="card-row' + (c.mastered ? ' is-mastered' : '') + '">' +
+        '<div class="card-index">' + (i + 1) + '</div>' +
+        '<div class="card-content">' +
+          '<div class="card-q">' + escapeHtml(c.question) + '</div>' +
+          '<div class="card-a">' + escapeHtml(c.answer) + '</div>' +
+        '</div>' +
+        '<div class="card-row-actions">' +
+          '<button class="icon-btn" data-action="edit-card" data-id="' + c.id + '">Edit</button>' +
+          '<button class="icon-btn" data-action="delete-card" data-id="' + c.id + '">Hapus</button>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+  }
+
+  $('#btnBackToDash').addEventListener('click', goDashboard);
+
+  $('#addCardForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    const set = getSet(ui.currentSetId);
+    if(!set){ toast('Set tidak ditemukan'); return; }
+
+    const qEl = $('#newQuestion');
+    const aEl = $('#newAnswer');
+    const question = qEl.value.trim();
+    const answer = aEl.value.trim();
+
+    if(!question || !answer){
+      toast('Pertanyaan dan jawaban wajib diisi');
+      (!question ? qEl : aEl).focus();
+      return;
+    }
+
+    set.cards.push({ id: uid(), question: question, answer: answer, mastered: false });
+    set.updatedAt = Date.now();
+    save();
+
+    qEl.value = '';
+    aEl.value = '';
+    qEl.focus();
+
+    renderSet();
+    toast('Kartu berhasil ditambahkan');
+  });
+
+  $('#cardList').addEventListener('click', function(e){
+    const btn = e.target.closest('button[data-action]');
+    if(!btn) return;
+
+    const set = getSet(ui.currentSetId);
+    if(!set) return;
+
+    const cardId = btn.dataset.id;
+    const card = set.cards.find(c => c.id === cardId);
+    if(!card) return;
+
+    if(btn.dataset.action === 'edit-card'){
+      openCardModal(card);
+    }else if(btn.dataset.action === 'delete-card'){
+      openModal({
+        title: 'Hapus kartu ini?',
+        body: '<p>Kartu berikut akan dihapus permanen:</p>' +
+              '<div class="quote">' + escapeHtml(truncate(card.question, 160)) + '</div>',
+        actions: [
+          { label: 'Batal', className: 'btn-ghost' },
+          { label: 'Hapus', className: 'btn-primary', onClick: function(){
+              set.cards = set.cards.filter(c => c.id !== cardId);
+              set.updatedAt = Date.now();
+              save();
+              renderSet();
+              toast('Kartu dihapus');
+            } }
+        ]
+      });
+    }
+  });
+
+  function openCardModal(card){
+    openModal({
+      title: 'Edit Kartu',
+      body:
+        '<label class="field"><span>Pertanyaan</span>' +
+          '<textarea id="editQ" rows="3" maxlength="500">' + escapeHtml(card.question) + '</textarea></label>' +
+        '<label class="field"><span>Jawaban</span>' +
+          '<textarea id="editA" rows="3" maxlength="500">' + escapeHtml(card.answer) + '</textarea></label>',
+      actions: [
+        { label: 'Batal', className: 'btn-ghost' },
+        { label: 'Simpan', className: 'btn-primary', onClick: function(){
+            const q = $('#editQ').value.trim();
+            const a = $('#editA').value.trim();
+            if(!q || !a){ toast('Pertanyaan dan jawaban wajib diisi'); return false; }
+
+            const set = getSet(ui.currentSetId);
+            if(!set) return false;
+
+            card.question = q;
+            card.answer = a;
+            set.updatedAt = Date.now();
+            save();
+            renderSet();
+            toast('Kartu diperbarui');
+          } }
+      ]
+    });
+  }
+
+  /* =========================================================
+     BUAT / EDIT / HAPUS SET
+     ========================================================= */
+  function openSetFormModal(setId){
+    const set = setId ? getSet(setId) : null;
+    const cats = getCategories();
+
+    openModal({
+      title: set ? 'Edit Info Set' : 'Set Flashcard Baru',
+      body:
+        '<label class="field"><span>Judul set</span>' +
+          '<input class="input" id="fTitle" maxlength="80" placeholder="Mis. Biologi Dasar" value="' +
+            (set ? escapeHtml(set.title) : '') + '"></label>' +
+        '<label class="field"><span>Kategori / mata pelajaran</span>' +
+          '<input class="input" id="fCategory" maxlength="40" list="categoryList" placeholder="Mis. Sains" value="' +
+            (set ? escapeHtml(set.category || '') : '') + '"></label>' +
+        '<datalist id="categoryList">' +
+          cats.map(c => '<option value="' + escapeHtml(c) + '">').join('') +
+        '</datalist>',
+      actions: [
+        { label: 'Batal', className: 'btn-ghost' },
+        { label: set ? 'Simpan' : 'Buat Set', className: 'btn-primary', onClick: function(){
+            const title = $('#fTitle').value.trim();
+            const category = $('#fCategory').value.trim();
+
+            if(!title){ toast('Judul set tidak boleh kosong'); return false; }
+
+            if(set){
+              set.title = title;
+              set.category = category;
+              set.updatedAt = Date.now();
+              save();
+              renderSet();
+              renderDashboard();
+              toast('Info set diperbarui');
+            }else{
+              const newSet = {
+                id: uid(), title: title, category: category,
+                createdAt: Date.now(), updatedAt: Date.now(), cards: []
+              };
+              state.sets.unshift(newSet);
+              save();
+              renderDashboard();
+              toast('Set baru berhasil dibuat');
+              setTimeout(function(){ openSet(newSet.id); }, 0);
+            }
+          } }
+      ]
+    });
+  }
+
+  $('#btnNewSet').addEventListener('click', function(){ openSetFormModal(null); });
+  $('#btnEditSet').addEventListener('click', function(){ openSetFormModal(ui.currentSetId); });
+
+  $('#btnDeleteSet').addEventListener('click', function(){
+    const set = getSet(ui.currentSetId);
+    if(!set) return;
+
+    openModal({
+      title: 'Hapus set ini?',
+      body: '<p>Set <strong>' + escapeHtml(set.title) + '</strong> beserta ' + set.cards.length +
+            ' kartu di dalamnya akan dihapus permanen.</p>',
+      actions: [
+        { label: 'Batal', className: 'btn-ghost' },
+        { label: 'Hapus Set', className: 'btn-primary', onClick: function(){
+            state.sets = state.sets.filter(s => s.id !== set.id);
+            save();
+            goDashboard();
+            toast('Set dihapus');
+          } }
+      ]
+    });
+  });
+
+  $('#btnResetProgress').addEventListener('click', function(){
+    const set = getSet(ui.currentSetId);
+    if(!set) return;
+
+    openModal({
+      title: 'Reset progres?',
+      body: '<p>Semua kartu di set ini akan ditandai <strong>belum dikuasai</strong>. Kartu tetap tersimpan.</p>',
+      actions: [
+        { label: 'Batal', className: 'btn-ghost' },
+        { label: 'Reset', className: 'btn-primary', onClick: function(){
+            set.cards.forEach(c => { c.mastered = false; });
+            set.updatedAt = Date.now();
+            save();
+            renderSet();
+            renderDashboard();
+            toast('Progres direset');
+          } }
+      ]
+    });
+  });
+
+  $('#btnStartStudy').addEventListener('click', function(){ startStudy(ui.currentSetId); });
+
+  /* =========================================================
+     MODE BELAJAR
+     ========================================================= */
+  function startStudy(setId, opts){
+    opts = opts || {};
+    const set = getSet(setId);
+    if(!set){ toast('Set tidak ditemukan'); return; }
+
+    let cards = set.cards.slice();
+    if(opts.onlyIds && opts.onlyIds.length){
+      cards = cards.filter(c => opts.onlyIds.indexOf(c.id) !== -1);
+    }
+    if(!cards.length){ toast('Tidak ada kartu untuk dipelajari'); return; }
+
+    const shouldShuffle = (opts.shuffle !== undefined)
+      ? opts.shuffle
+      : $('#shuffleToggle').checked;
+
+    if(shouldShuffle) shuffleArray(cards);
+
+    ui.session = {
+      setId: setId,
+      setName: set.title,
+      ids: cards.map(c => c.id),
+      queue: cards.map(c => c.id),
+      total: cards.length,
+      mastered: new Set(),
+      flipped: false
+    };
+
+    ui.currentSetId = setId;
+    showView('study');
+    renderStudy();
+  }
+
+  function setCardFlipped(flipped, animate){
+    const fc = $('#flashcard');
+    const inner = fc.querySelector('.flashcard-inner');
+
+    if(animate === false){
+      inner.style.transition = 'none';
+      fc.dataset.flipped = flipped ? 'true' : 'false';
+      void inner.offsetWidth;
+      inner.style.transition = '';
+    }else{
+      fc.dataset.flipped = flipped ? 'true' : 'false';
+    }
+  }
+
+  function updateStudyProgress(){
+    const s = ui.session;
+    if(!s) return;
+    const mastered = s.mastered.size;
+    const pct = s.total ? Math.round(mastered / s.total * 100) : 0;
+    $('#studyBar').style.width = pct + '%';
+    $('#studyProgressText').textContent = mastered + ' dari ' + s.total +
+      ' kartu dikuasai · ' + pct + '%';
+  }
+
+  function renderStudyControls(){
+    const s = ui.session;
+    const controls = $('#studyControls');
+    if(!s){ controls.innerHTML = ''; return; }
+
+    if(!s.flipped){
+      controls.innerHTML = '<button class="btn btn-primary btn-lg" data-action="flip">Lihat Jawaban</button>';
+    }else{
+      controls.innerHTML =
+        '<button class="btn btn-ghost btn-lg" data-action="again">Belum Hafal</button>' +
+        '<button class="btn btn-primary btn-lg" data-action="mastered">Hafal</button>';
+    }
+  }
+
+  function renderStudy(){
+    const s = ui.session;
+    if(!s){ goDashboard(); return; }
+
+    const card = findCard(s.setId, s.queue[0]);
+    if(!card){ finishSession(); return; }
+
+    $('#studySetName').textContent = s.setName;
+    $('#flashQuestion').textContent = card.question;
+    $('#flashAnswer').textContent = card.answer;
+
+    s.flipped = false;
+    setCardFlipped(false, false);
+    renderStudyControls();
+    updateStudyProgress();
+  }
+
+  function flipCard(){
+    const s = ui.session;
+    if(!s) return;
+    s.flipped = !s.flipped;
+    setCardFlipped(s.flipped, true);
+    renderStudyControls();
+  }
+
+  function rateCard(isMastered){
+    const s = ui.session;
+    if(!s || !s.flipped) return;
+
+    const cardId = s.queue[0];
+    const card = findCard(s.setId, cardId);
+    if(card) card.mastered = isMastered;
+
+    if(isMastered){
+      s.mastered.add(cardId);
+      s.queue.shift();
+    }else{
+      s.mastered.delete(cardId);
+      s.queue.shift();
+      s.queue.push(cardId); // kartu diulang sampai hafal
+    }
+
+    save();
+
+    if(s.queue.length === 0){ finishSession(); return; }
+    renderStudy();
+  }
+
+  $('#studyControls').addEventListener('click', function(e){
+    const btn = e.target.closest('button[data-action]');
+    if(!btn) return;
+    const action = btn.dataset.action;
+    if(action === 'flip') flipCard();
+    else if(action === 'mastered') rateCard(true);
+    else if(action === 'again') rateCard(false);
+  });
+
+  $('#flashcard').addEventListener('click', flipCard);
+
+  $('#btnExitStudy').addEventListener('click', function(){
+    if(!ui.session) return;
+    openModal({
+      title: 'Akhiri sesi belajar?',
+      body: '<p>Ringkasan sesi ini akan dicatat ke riwayat belajar kamu.</p>',
+      actions: [
+        { label: 'Lanjut Belajar', className: 'btn-ghost' },
+        { label: 'Akhiri Sesi', className: 'btn-primary', onClick: function(){
+            setTimeout(finishSession, 0);
+          } }
+      ]
+    });
+  });
+
+  document.addEventListener('keydown', function(e){
+    if(!ui.session) return;
+    if(!$('#modalOverlay').hidden) return;
+    const t = e.target;
+    if(t instanceof Element && t.closest('input, textarea, button, select')) return;
+
+    if(e.code === 'Space' || e.key === 'Enter'){
+      e.preventDefault();
+      flipCard();
+    }else if(ui.session.flipped && (e.key === 'ArrowRight' || e.key === '1')){
+      e.preventDefault();
+      rateCard(true);
+    }else if(ui.session.flipped && (e.key === 'ArrowLeft' || e.key === '2')){
+      e.preventDefault();
+      rateCard(false);
+    }
+  });
+
+  /* =========================================================
+     RINGKASAN SESI
+     ========================================================= */
+  function finishSession(){
+    const s = ui.session;
+    if(!s) return;
+    ui.session = null;
+
+    const total = s.total;
+    const mastered = s.mastered.size;
+    const unmasteredIds = s.ids.filter(id => !s.mastered.has(id));
+    const percentage = total ? Math.round(mastered / total * 100) : 0;
+
+    if(mastered > 0 || unmasteredIds.length === 0){
+      state.history.push({
+        id: uid(), setId: s.setId, setName: s.setName, date: Date.now(),
+        total: total, mastered: mastered, percentage: percentage
+      });
+      if(state.history.length > 80) state.history = state.history.slice(-80);
+      save();
+    }
+
+    goDashboard();
+
+    let body =
+      '<div class="summary-hero">' +
+        '<div class="summary-pct">' + percentage + '%</div>' +
+        '<p class="summary-caption">Tingkat penguasaan sesi ini</p>' +
+      '</div>' +
+      '<div class="summary-stats">' +
+        '<div class="sum-stat"><strong>' + mastered + '</strong><span>Dikuasai</span></div>' +
+        '<div class="sum-stat"><strong>' + unmasteredIds.length + '</strong><span>Belum</span></div>' +
+        '<div class="sum-stat"><strong>' + total + '</strong><span>Total kartu</span></div>' +
+      '</div>';
+
+    if(unmasteredIds.length){
+      const shown = unmasteredIds.slice(0, 8);
+      body += '<div class="summary-list"><h3>Perlu diulang</h3><ul>' +
+        shown.map(function(id){
+          const c = findCard(s.setId, id);
+          return c ? '<li>' + escapeHtml(truncate(c.question, 100)) + '</li>' : '';
+        }).join('') +
+        '</ul>' +
+        (unmasteredIds.length > shown.length
+          ? '<p class="muted small" style="margin-top:8px;">+' + (unmasteredIds.length - shown.length) + ' kartu lainnya</p>'
+          : '') +
+        '</div>';
+    }else{
+      body += '<p class="summary-caption" style="font-weight:600;color:var(--green-700);">' +
+        'Semua kartu berhasil dikuasai. Kerja bagus!</p>';
+    }
+
+    const actions = [];
+    if(unmasteredIds.length){
+      actions.push({
+        label: 'Ulangi yang Belum Hafal',
+        className: 'btn-primary',
+        onClick: function(){
+          setTimeout(function(){
+            startStudy(s.setId, { onlyIds: unmasteredIds, shuffle: true });
+          }, 0);
+        }
+      });
+      actions.push({ label: 'Selesai', className: 'btn-ghost' });
+    }else{
+      actions.push({ label: 'Selesai', className: 'btn-primary' });
+    }
+
+    openModal({ title: 'Ringkasan Belajar', body: body, actions: actions });
+  }
+
+  /* =========================================================
+     ANALISIS MATERI
+     ========================================================= */
+  const STOPWORDS = new Set(('yang dan atau di ke dari untuk dengan pada dalam adalah itu ini akan tidak ' +
+    'juga bisa dapat oleh karena agar supaya sebagai lebih sangat sudah telah masih para setiap semua ' +
+    'beberapa antara secara tersebut merupakan yaitu ialah yakni jika kalau maka saat ketika sehingga ' +
+    'namun tetapi tapi sedangkan serta bagi pun lah kah nya mereka kita kamu anda saya dia ia').split(' '));
+
+  function detectPairs(lines){
+    const pairs = [];
+    lines.forEach(function(rawLine){
+      let line = String(rawLine).replace(/^([-•*]|\d+[.)])\s+/, '').trim();
+      if(!line || line.length < 5) return;
+
+      const m = line.match(/^(.{2,90}?)\s*(?::|=|–|—|\s-\s)\s*(.{2,})$/);
+      if(!m) return;
+
+      const q = m[1].trim();
+      const a = m[2].trim();
+
+      if(q.length < 2 || a.length < 1) return;
+      if(/^\d+$/.test(q)) return;            // hindari jam/angka seperti "10:30"
+      if(/^https?$/i.test(q)) return;
+      if(a.length < 2) return;
+
+      pairs.push({ q: q, a: a });
+    });
+    return pairs;
+  }
+
+  function detectCloze(sentences){
+    const out = [];
+    sentences.forEach(function(sentence){
+      const words = sentence.split(/\s+/).filter(Boolean);
+      if(words.length < 6 || words.length > 45) return;
+
+      let best = null;
+      words.forEach(function(word){
+        const clean = word.replace(/[^A-Za-zÀ-ÿ0-9-]/g, '');
+        if(clean.length < 5) return;
+        if(STOPWORDS.has(clean.toLowerCase())) return;
+        if(/^\d+$/.test(clean)) return;
+        if(!best || clean.length > best.clean.length) best = { word: word, clean: clean };
+      });
+
+      if(!best) return;
+      const blanked = sentence.replace(best.word, '_____');
+      if(blanked === sentence) return;
+
+      out.push({ q: blanked.trim(), a: best.clean });
+    });
+    return out.slice(0, 60);
+  }
+
+  function analyzeMaterial(text){
+    const clean = String(text || '').trim();
+    const words = clean ? clean.split(/\s+/).filter(Boolean) : [];
+    const sentences = clean.split(/[.!?…]+(?:\s|$)/).map(s => s.trim()).filter(Boolean);
+    const paragraphs = clean.split(/\n\s*\n/).map(p => p.trim()).filter(Boolean);
+    const lines = clean.split(/\n/).map(l => l.trim()).filter(Boolean);
+
+    const wordCount = words.length;
+    const sentenceCount = sentences.length || (clean ? 1 : 0);
+    const avgSentence = sentenceCount ? Math.round(wordCount / sentenceCount) : 0;
+
+    return {
+      wordCount: wordCount,
+      sentenceCount: sentenceCount,
+      paragraphCount: Math.max(1, paragraphs.length),
+      avgSentence: avgSentence,
+      readingMinutes: Math.max(1, Math.ceil(wordCount / 180)),
+      hasNumbers: /\d/.test(clean),
+      hasList: lines.some(l => /^([-•*]|\d+[.)])\s+/.test(l)),
+      pairs: detectPairs(lines),
+      cloze: detectCloze(sentences)
+    };
+  }
+
+  function buildSteps(a){
+    const s = [];
+    s.push('Baca materi ini sekali dengan santai (± ' + a.readingMinutes +
+           ' menit). Tujuannya paham alurnya dulu, belum perlu hafal.');
+    if(a.pairs.length >= 2){
+      s.push('Materi ini sudah berisi ' + a.pairs.length +
+             ' pasangan istilah–arti. Tekan “Ubah jadi Flashcard”, lalu jawab satu per satu tanpa melihat.');
+    }else{
+      s.push('Tutup materi, lalu tulis atau ucapkan ulang isinya pakai kata-katamu sendiri. Bagian yang lupa, tandai.');
+    }
+    s.push('Ubah bagian penting jadi pertanyaan. Jawab tanpa melihat — ini inti dari latihan aktif.');
+    s.push('Ulangi hari ini, besok, lalu 3 hari kemudian. 5 menit tiap ulangan jauh lebih ampuh daripada sekali belajar 2 jam.');
+    s.push('Terakhir, jelaskan materi ini ke orang lain (atau ke diri sendiri) dalam 1 menit. Kalau lancar, berarti kamu sudah paham.');
+    return s;
+  }
+
+  function buildTips(a){
+    const t = [];
+    t.push({ title: 'Uji diri, jangan cuma dibaca', text: 'Membaca berulang terasa mudah tapi cepat hilang. Menjawab pertanyaan tanpa melihat membuat ingatan jauh lebih kuat.' });
+
+    if(a.wordCount > 400){
+      t.push({ title: 'Pecah jadi bagian kecil', text: 'Materi ini cukup panjang (± ' + a.wordCount + ' kata). Belajar 3–4 bagian @150 kata lebih cepat daripada sekaligus.' });
+    }
+    if(a.pairs.length >= 2){
+      t.push({ title: 'Materi sudah siap jadi kartu', text: 'Terdeteksi ' + a.pairs.length + ' pasangan istilah–arti. Tekan “Ubah jadi Flashcard” untuk langsung mulai latihan.' });
+    }
+    if(a.hasNumbers){
+      t.push({ title: 'Angka paling gampang hilang', text: 'Kelompokkan angka jadi 2–3 digit, lalu hubungkan dengan hal yang sudah kamu kenal.' });
+    }
+    if(a.avgSentence > 22){
+      t.push({ title: 'Kalimatnya panjang', text: 'Rata-rata kalimat ± ' + a.avgSentence + ' kata. Potong jadi poin pendek supaya lebih mudah disimpan otak.' });
+    }
+    if(a.paragraphCount >= 5){
+      t.push({ title: 'Buat peta konsep', text: 'Materi punya ' + a.paragraphCount + ' bagian. Gambar kotak-kotak hubungan antar bagian, lalu jelaskan tiap kotak tanpa melihat.' });
+    }
+    if(a.hasList){
+      t.push({ title: 'Daftar diubah jadi pertanyaan', text: 'Setiap poin dalam daftar bisa dijadikan satu pertanyaan. Ini cara tercepat mengingat daftar.' });
+    }
+    if(a.wordCount < 120){
+      t.push({ title: 'Materi singkat', text: 'Materi pendek paling cepat dikuasai dengan teknik “jelaskan ke orang lain”. Ceritakan dalam 60 detik tanpa membaca.' });
+    }
+    t.push({ title: 'Tidur itu bagian belajar', text: 'Ulangi materi sebelum tidur. Otak merapikan ingatan saat kamu tidur, jadi besok terasa lebih mudah.' });
+    return t;
+  }
+
+  function buildPlan(a){
+    const total = a.wordCount < 200 ? 10 : (a.wordCount < 600 ? 15 : 20);
+    const parts = [
+      { f: 0.15, act: 'Baca materi sekali dengan santai. Fokus paham alurnya, belum perlu hafal.' },
+      { f: 0.25, act: 'Tutup materi, ceritakan ulang dengan kata-katamu sendiri. Tandai bagian yang lupa.' },
+      { f: 0.15, act: 'Baca ulang hanya bagian yang tadi lupa. Tidak perlu mengulang semuanya.' },
+      { f: 0.30, act: 'Jawab pertanyaan dari materi tanpa melihat (pakai flashcard atau Latihan Ingat).' },
+      { f: 0.15, act: 'Tulis inti materi dalam 3 kalimat. Ini ringkasan yang kamu ulang di hari berikutnya.' }
+    ];
+
+    let acc = 0;
+    const rows = parts.map(function(p){
+      const mins = Math.max(1, Math.round(total * p.f));
+      const row = { start: acc, mins: mins, act: p.act };
+      acc += mins;
+      return row;
+    });
+
+    return { total: total, rows: rows };
+  }
+
+  function buildSchedule(){
+    const days = [0, 1, 3, 7, 14];
+    const labels = ['Hari ini', 'Besok', '3 hari lagi', '1 minggu lagi', '2 minggu lagi'];
+    const now = new Date();
+    return days.map(function(n, i){
+      const d = new Date(now.getTime() + n * 86400000);
+      return {
+        label: labels[i],
+        date: d.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'short' })
+      };
+    });
+  }
+
+  function buildCardsFromAnalysis(a){
+    if(a.pairs.length >= 2){
+      return a.pairs.map(function(p){
+        return { question: p.q, answer: p.a };
+      });
+    }
+    return a.cloze.map(function(c){
+      return { question: c.q, answer: c.a };
+    });
+  }
+
+  function renderAnalysis(a){
+    const steps = buildSteps(a);
+    const tips = buildTips(a);
+    const plan = buildPlan(a);
+    const schedule = buildSchedule();
+    const cards = buildCardsFromAnalysis(a);
+
+    let html = '';
+
+    /* Ringkasan angka */
+    html += '<div class="panel"><h2>Ringkasan Materi</h2>' +
+      '<div class="stats" style="margin-bottom:0;">' +
+        '<div class="stat"><span class="stat-value">' + a.wordCount + '</span><span class="stat-label">Kata</span></div>' +
+        '<div class="stat"><span class="stat-value">' + a.sentenceCount + '</span><span class="stat-label">Kalimat</span></div>' +
+        '<div class="stat"><span class="stat-value">' + a.paragraphCount + '</span><span class="stat-label">Paragraf</span></div>' +
+        '<div class="stat"><span class="stat-value">' + a.readingMinutes + ' mnt</span><span class="stat-label">Perkiraan Baca</span></div>' +
+      '</div></div>';
+
+    /* Cara tercepat */
+    html += '<div class="panel"><h2>Cara Tercepat Menghafal</h2>' +
+      '<ol class="steps">' + steps.map(s => '<li>' + escapeHtml(s) + '</li>').join('') + '</ol></div>';
+
+    /* Tips khusus */
+    html += '<div class="panel"><h2>Tips Khusus Materi Ini</h2><div class="advice">' +
+      tips.map(t => '<div class="advice-item"><strong>' + escapeHtml(t.title) + '</strong><p>' +
+        escapeHtml(t.text) + '</p></div>').join('') +
+      '</div></div>';
+
+    /* Rencana */
+    html += '<div class="panel"><h2>Rencana Belajar ' + plan.total + ' Menit</h2><div class="plan">' +
+      plan.rows.map(r => '<div class="plan-row"><span class="plan-time">' + r.start + '–' + (r.start + r.mins) +
+        ' mnt</span><span>' + escapeHtml(r.act) + '</span></div>').join('') +
+      '</div></div>';
+
+    /* Jadwal ulang */
+    html += '<div class="panel"><h2>Jadwal Ulang Supaya Tidak Lupa</h2><div class="schedule">' +
+      schedule.map(s => '<div class="schedule-row"><strong>' + escapeHtml(s.label) +
+        '</strong><span class="muted">' + escapeHtml(s.date) + '</span></div>').join('') +
+      '</div><p class="muted small" style="margin-top:12px;">Cukup 5–10 menit tiap ulangan. Mengulang di waktu yang tepat lebih ampuh daripada belajar lama sekali.</p></div>';
+
+    /* Catatan kartu */
+    if(cards.length){
+      html += '<div class="panel"><h2>Siap Dijadikan Flashcard</h2>' +
+        '<p class="small muted">Terdeteksi <strong>' + cards.length + '</strong> kartu yang bisa dibuat otomatis. ' +
+        'Tekan tombol “Ubah jadi Flashcard” di atas untuk memakainya.</p></div>';
+    }else{
+      html += '<div class="panel"><h2>Belum Bisa Dipecah Jadi Kartu</h2>' +
+        '<p class="small muted">Tidak ditemukan pasangan istilah–arti. Tulis satu istilah per baris dengan format ' +
+        '<strong>Istilah: arti</strong> supaya bisa diubah jadi flashcard otomatis. ' +
+        'Sementara itu, gunakan tombol <strong>Latihan Ingat</strong> — caranya tetap sangat efektif.</p></div>';
+    }
+
+    $('#analysisResult').innerHTML = html;
+  }
+
+  /* =========================================================
+     AKSI MATERI
+     ========================================================= */
+  function newMaterial(){
+    ui.currentMaterialId = null;
+    ui.lastAnalysis = null;
+    ui.recallText = '';
+
+    $('#matTitle').value = '';
+    $('#matContent').value = '';
+    $('#materialHeading').textContent = 'Tulis Materi yang Mau Dihafal';
+    $('#analysisResult').innerHTML = '';
+    $('#btnToCards').disabled = true;
+    $('#btnRecall').disabled = true;
+
+    stopRecallTimer();
+    $('#recallPanel').hidden = true;
+    $('#materialEditor').hidden = false;
+
+    showView('material');
+  }
+
+  function openMaterial(id){
+    const m = getMaterial(id);
+    if(!m){ toast('Materi tidak ditemukan'); return; }
+
+    ui.currentMaterialId = id;
+    ui.lastAnalysis = null;
+    ui.recallText = '';
+
+    $('#matTitle').value = m.title;
+    $('#matContent').value = m.content;
+    $('#materialHeading').textContent = 'Materi: ' + m.title;
+    $('#analysisResult').innerHTML = '';
+    $('#btnToCards').disabled = true;
+    $('#btnRecall').disabled = true;
+
+    stopRecallTimer();
+    $('#recallPanel').hidden = true;
+    $('#materialEditor').hidden = false;
+
+    showView('material');
+
+    // langsung dianalisis supaya pengguna tidak perlu menekan tombol dua kali
+    runAnalysis(true);
+  }
+
+  function deleteMaterial(id){
+    const m = getMaterial(id);
+    if(!m) return;
+
+    openModal({
+      title: 'Hapus materi ini?',
+      body: '<p>Materi <strong>' + escapeHtml(m.title) + '</strong> akan dihapus permanen.</p>',
+      actions: [
+        { label: 'Batal', className: 'btn-ghost' },
+        { label: 'Hapus', className: 'btn-primary', onClick: function(){
+            state.materials = state.materials.filter(x => x.id !== id);
+            save();
+            if(ui.currentMaterialId === id){
+              ui.currentMaterialId = null;
+              goDashboard();
+            }else{
+              renderDashboard();
+            }
+            toast('Materi dihapus');
+          } }
+      ]
+    });
+  }
+
+  function runAnalysis(silent){
+    const content = $('#matContent').value.trim();
+    if(countWords(content) < 5){
+      toast('Isi materi dulu ya (minimal beberapa kalimat)');
+      return;
+    }
+
+    const a = analyzeMaterial(content);
+    ui.lastAnalysis = a;
+    renderAnalysis(a);
+
+    const cards = buildCardsFromAnalysis(a);
+    $('#btnToCards').disabled = cards.length === 0;
+    $('#btnRecall').disabled = false;
+
+    if(!silent) toast('Analisis selesai — rencana belajar sudah siap');
+  }
+
+  $('#btnAnalyze').addEventListener('click', function(){ runAnalysis(false); });
+  $('#btnNewMaterial').addEventListener('click', newMaterial);
+  $('#btnAddMaterial').addEventListener('click', newMaterial);
+  $('#btnBackFromMaterial').addEventListener('click', goDashboard);
+
+  $('#btnSaveMaterial').addEventListener('click', function(){
+    const titleRaw = $('#matTitle').value.trim();
+    const content = $('#matContent').value.trim();
+
+    if(!content){ toast('Isi materi tidak boleh kosong'); $('#matContent').focus(); return; }
+    if(countWords(content) < 5){ toast('Materi terlalu pendek — tambahkan beberapa kalimat lagi'); return; }
+
+    const title = titleRaw || ('Materi ' + new Date().toLocaleDateString('id-ID'));
+
+    if(ui.currentMaterialId){
+      const m = getMaterial(ui.currentMaterialId);
+      if(!m){ toast('Materi tidak ditemukan'); return; }
+      m.title = title.slice(0, 120);
+      m.content = content.slice(0, 60000);
+      m.updatedAt = Date.now();
+      save();
+      $('#materialHeading').textContent = 'Materi: ' + m.title;
+      renderDashboard();
+      toast('Perubahan materi disimpan');
+    }else{
+      const m = {
+        id: uid(),
+        title: title.slice(0, 120),
+        content: content.slice(0, 60000),
+        createdAt: Date.now(),
+        updatedAt: Date.now()
+      };
+      state.materials.unshift(m);
+      ui.currentMaterialId = m.id;
+      save();
+      $('#materialHeading').textContent = 'Materi: ' + m.title;
+      renderDashboard();
+      toast('Materi tersimpan');
+    }
+  });
+
+  $('#btnToCards').addEventListener('click', function(){
+    const a = ui.lastAnalysis;
+    if(!a){ toast('Analisis materinya dulu ya'); return; }
+
+    const cards = buildCardsFromAnalysis(a);
+    if(!cards.length){
+      toast('Belum ada pasangan istilah–arti. Tulis dengan format “Istilah: arti” per baris.');
+      return;
+    }
+
+    const defaultTitle = $('#matTitle').value.trim() || 'Kartu dari Materi';
+    const preview = cards.slice(0, 6).map(function(c){
+      return '<div class="quote"><strong>' + escapeHtml(truncate(c.question, 120)) + '</strong><br>' +
+             escapeHtml(truncate(c.answer, 120)) + '</div>';
+    }).join('');
+
+    openModal({
+      title: 'Ubah jadi Flashcard',
+      body:
+        '<p class="small muted">Ditemukan <strong>' + cards.length + '</strong> kartu. Berikut contohnya:</p>' +
+        preview +
+        (cards.length > 6 ? '<p class="small muted">…dan ' + (cards.length - 6) + ' kartu lainnya.</p>' : '') +
+        '<label class="field" style="margin-top:14px;"><span>Judul set baru</span>' +
+          '<input class="input" id="cardSetTitle" maxlength="80" value="' + escapeHtml(defaultTitle) + '"></label>' +
+        '<label class="field"><span>Kategori (opsional)</span>' +
+          '<input class="input" id="cardSetCategory" maxlength="40" placeholder="Mis. Biologi"></label>',
+      actions: [
+        { label: 'Batal', className: 'btn-ghost' },
+        { label: 'Buat Set', className: 'btn-primary', onClick: function(){
+            const title = $('#cardSetTitle').value.trim();
+            const category = $('#cardSetCategory').value.trim();
+            if(!title){ toast('Judul set tidak boleh kosong'); return false; }
+
+            const newSet = {
+              id: uid(),
+              title: title,
+              category: category,
+              createdAt: Date.now(),
+              updatedAt: Date.now(),
+              cards: cards.map(function(c){
+                return { id: uid(), question: c.question, answer: c.answer, mastered: false };
+              })
+            };
+
+            state.sets.unshift(newSet);
+            save();
+            renderDashboard();
+            toast('Set flashcard berhasil dibuat dari materi');
+            setTimeout(function(){ openSet(newSet.id); }, 0);
+          } }
+      ]
+    });
+  });
+
+  /* =========================================================
+     LATIHAN INGAT (RECALL)
+     ========================================================= */
+  let recallTimer = null;
+  let recallDeadline = 0;
+
+  function stopRecallTimer(){
+    if(recallTimer){ clearInterval(recallTimer); recallTimer = null; }
+  }
+
+  function fmtTime(sec){
+    const m = Math.floor(sec / 60);
+    const s = sec % 60;
+    return m + ':' + (s < 10 ? '0' + s : s);
+  }
+
+  function renderRecallIdle(){
+    $('#recallStage').innerHTML =
+      '<div class="panel-head"><h2>Latihan Ingat</h2></div>' +
+      '<p class="muted small" style="max-width:65ch;">' +
+        'Cara paling cepat menguji ingatan: baca materimu sekali, lalu sembunyikan dan tulis ulang dari ingatan. ' +
+        'Setelah itu bandingkan dengan aslinya. Materi akan disembunyikan selama latihan.' +
+      '</p>' +
+      '<div class="mat-actions" style="margin-top:14px;">' +
+        '<button class="btn btn-primary" data-act="start">Mulai Latihan</button>' +
+        '<button class="btn btn-ghost" data-act="close">Tutup</button>' +
+      '</div>';
+  }
+
+  $('#btnRecall').addEventListener('click', function(){
+    const content = $('#matContent').value.trim();
+    if(!content){ toast('Isi materi dulu ya'); return; }
+
+    $('#recallPanel').hidden = false;
+    stopRecallTimer();
+    renderRecallIdle();
+    $('#recallPanel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
+  $('#recallPanel').addEventListener('click', function(e){
+    const btn = e.target.closest('button[data-act]');
+    if(!btn) return;
+    const act = btn.dataset.act;
+
+    if(act === 'start' || act === 'again') startRecall();
+    else if(act === 'finish') finishRecall();
+    else if(act === 'close'){
+      stopRecallTimer();
+      $('#recallPanel').hidden = true;
+      $('#materialEditor').hidden = false;
+    }
+  });
+
+  function startRecall(){
+    const content = $('#matContent').value.trim();
+    if(!content){ toast('Materi masih kosong'); return; }
+
+    const words = countWords(content);
+    const secs = words < 150 ? 60 : (words < 400 ? 90 : 120);
+
+    ui.recallText = '';
+    $('#materialEditor').hidden = true;
+    $('#recallPanel').hidden = false;
+
+    $('#recallStage').innerHTML =
+      '<div class="panel-head"><h2>Latihan Ingat</h2>' +
+        '<span class="pill" id="recallTimer">' + fmtTime(secs) + '</span></div>' +
+      '<p class="muted small">Materi sudah disembunyikan. Tulis semua yang kamu ingat, lalu bandingkan.</p>' +
+      '<textarea id="recallInput" rows="8" placeholder="Tulis yang kamu ingat di sini…" style="margin-top:12px;"></textarea>' +
+      '<div class="mat-actions" style="margin-top:14px;">' +
+        '<button class="btn btn-primary" data-act="finish">Selesai &amp; Bandingkan</button>' +
+      '</div>';
+
+    recallDeadline = Date.now() + secs * 1000;
+
+    stopRecallTimer();
+    recallTimer = setInterval(function(){
+      const remaining = Math.max(0, Math.round((recallDeadline - Date.now()) / 1000));
+      const el = $('#recallTimer');
+      if(el) el.textContent = fmtTime(remaining);
+      if(remaining <= 0){
+        stopRecallTimer();
+        toast('Waktu habis — sekarang bandingkan');
+        finishRecall();
+      }
+    }, 500);
+
+    const input = $('#recallInput');
+    if(input) setTimeout(function(){ input.focus(); }, 60);
+  }
+
+  function finishRecall(){
+    const input = $('#recallInput');
+    if(input) ui.recallText = input.value;
+
+    stopRecallTimer();
+
+    const content = $('#matContent').value.trim();
+    const written = (ui.recallText || '').trim();
+
+    $('#recallStage').innerHTML =
+      '<div class="panel-head"><h2>Perbandingan</h2><span class="pill">Selesai</span></div>' +
+      '<p class="muted small">Baca materi asli, lalu cek bagian mana yang terlewat di tulisanmu.</p>' +
+      '<div class="compare" style="margin-top:12px;">' +
+        '<div><h3>Materi Asli</h3><div class="compare-box">' + escapeHtml(content) + '</div></div>' +
+        '<div><h3>Yang Kamu Tulis</h3><div class="compare-box">' +
+          (written ? escapeHtml(written) : '<span class="muted">(kamu belum menulis apa pun)</span>') +
+        '</div></div>' +
+      '</div>' +
+      '<div class="mat-actions" style="margin-top:14px;">' +
+        '<button class="btn btn-primary" data-act="again">Coba Lagi</button>' +
+        '<button class="btn btn-ghost" data-act="close">Tutup Latihan</button>' +
+      '</div>';
+  }
+
+  /* =========================================================
+     EKSPOR / IMPOR
+     ========================================================= */
+  $('#btnExport').addEventListener('click', function(){
+    const payload = {
+      app: 'FlashLearn',
+      version: 2,
+      exportedAt: new Date().toISOString(),
+      sets: state.sets,
+      materials: state.materials,
+      history: state.history
+    };
+
+    try{
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'flashlearn-' + new Date().toISOString().slice(0, 10) + '.json';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1500);
+      toast('Data berhasil diekspor');
+    }catch(e){
+      toast('Gagal mengekspor data');
+    }
+  });
+
+  $('#btnImport').addEventListener('click', function(){
+    $('#fileInput').value = '';
+    $('#fileInput').click();
+  });
+
+  $('#fileInput').addEventListener('change', function(e){
+    const file = e.target.files && e.target.files[0];
+    if(!file) return;
+
+    if(file.size > 5 * 1024 * 1024){
+      toast('File terlalu besar (maksimal 5 MB)');
+      return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = function(){
+      let data;
+      try{
+        data = JSON.parse(String(reader.result));
+      }catch(err){
+        toast('Impor gagal: file bukan JSON yang valid');
+        return;
+      }
+
+      if(!data || !Array.isArray(data.sets)){
+        toast('Impor gagal: format tidak dikenali');
+        return;
+      }
+
+      const sets = data.sets.map(normalizeSet).filter(Boolean);
+      const materials = Array.isArray(data.materials)
+        ? data.materials.map(normalizeMaterial).filter(Boolean)
+        : [];
+
+      if(!sets.length && !materials.length){
+        toast('Impor gagal: tidak ada data valid dalam file');
+        return;
+      }
+
+      const totalCards = sets.reduce((n, s) => n + s.cards.length, 0);
+
+      openModal({
+        title: 'Konfirmasi Impor',
+        body: '<p>File berisi <strong>' + sets.length + ' set</strong> (' + totalCards +
+              ' kartu) dan <strong>' + materials.length + ' materi</strong>.</p>' +
+              '<p style="margin-top:10px;">Impor akan <strong>menggantikan seluruh data</strong> yang sekarang tersimpan di perangkat ini.</p>',
+        actions: [
+          { label: 'Batal', className: 'btn-ghost' },
+          { label: 'Impor & Ganti', className: 'btn-primary', onClick: function(){
+              state.sets = sets;
+              state.materials = materials;
+              state.history = Array.isArray(data.history)
+                ? data.history.filter(h => h && typeof h.date === 'number' && typeof h.total === 'number')
+                : [];
+
+              save();
+              ui.search = '';
+              $('#searchInput').value = '';
+              ui.currentMaterialId = null;
+              goDashboard();
+              toast('Data berhasil diimpor');
+            } }
+        ]
+      });
+    };
+
+    reader.onerror = function(){ toast('Gagal membaca file'); };
+    reader.readAsText(file);
+  });
+
+  /* =========================================================
+     INISIALISASI
+     ========================================================= */
+  function init(){
+    load();
+    renderDashboard();
+    showView('dashboard');
+  }
+
+  init();
+
+})();
+</script>
+</body>
+</html>
